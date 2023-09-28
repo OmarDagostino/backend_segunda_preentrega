@@ -1,0 +1,58 @@
+ <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: center; 
+            vertical-align: middle; 
+            padding: 8px;
+        }
+    </style>
+
+<body>
+    <h4>
+        Identificador del carrito 
+    
+    <strong> 
+        {{cart.cartId}}
+    </strong>
+    </h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Identificador del producto</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Código</th>
+                <th>Existencias</th>
+                <th>Cantidad comprada</th>
+            </tr>
+        </thead>
+        <tbody id="productTableBody">
+            {{#each cart.products}}
+                <tr>
+                    <td>{{this.productId}}</td>
+                    <td>{{this.title}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.code}}</td>
+                    <td>{{this.stock}}</td>
+                    <td>{{this.cantidad}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</body>
+</body>

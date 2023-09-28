@@ -1,0 +1,52 @@
+<style>
+    table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    text-align: center; 
+    vertical-align: middle; 
+    padding: 8px;
+}
+</style>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Identificador</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Código</th>
+                <th>Existencias</th>
+                <th>Agregar al carrito</th>
+            </tr>
+        </thead>
+        <tbody id="productTableBody">
+            {{#each renderedProducts}}
+                <tr>
+                    <td>{{_id}}</td>
+                    <td>{{title}}</td>
+                    <td>{{description}}</td>
+                    <td>{{price}}</td>
+                    <td>{{code}}</td>
+                    <td>{{stock}}</td>
+                    <td>
+                        <button class="addToCartButton" data-productid="{{_id}}">Agregar al carrito</button>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</body>

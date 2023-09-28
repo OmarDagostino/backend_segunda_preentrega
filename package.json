@@ -1,0 +1,28 @@
+{
+  "name": "segunda_preentrega_final",
+  "version": "1.0.0",
+  "description": "Mongo Atlas, Mongosse y Agregaciones",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/app.js",
+    "dev": "nodemon ./src/app.js"
+  },
+  "author": "Omar D agostino",
+  "license": "ISC",
+  "keywords": [],
+  "type": "module",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
+    "express-validator": "^7.0.1",
+    "mongoose": "^7.5.1",
+    "mongoose-paginate-v2": "^1.7.4",
+    "nodemon": "^3.0.1",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
