@@ -1,4 +1,4 @@
-# Desafío de la clase 15 del curso de Programación Back-end
+# Segunda Pre-entrega final
 # Comisión 55565  de CoderHouse
 
 ## Autor : Omar D'Agostino
@@ -8,25 +8,29 @@
 - Motor de plantillas : Handlebars
 - Websocket : socket.io
 - Mongo DB Atlas usado con Mongoose
-    -base de datos : ecommerce
-    -colecciones : products / carts / messages
+    -base de datos : ecommerce1
+    -colecciones : products1 / carts1 / messages1
 - Dependencias 
-    - express : "^4.18.2"
-    - express-handlebars: "^7.1.2"
-    - express-validator : "^7.0.1"
-    - socket.io: "^4.7.2"
-    - socket.io-client: "^4.7.2"
-    - Mongoose : "^7.5.1"
+    - "express": "^4.18.2",
+    - "express-handlebars": "^7.1.2",
+    - "express-validator": "^7.0.1",
+    - "mongoose": "^7.5.1",
+    - "mongoose-paginate-v2": "^1.7.4",
+    - "nodemon": "^3.0.1",
+    - "socket.io": "^4.7.2",
+    - "socket.io-client": "^4.7.2"
 
-## Funcionalidades agregadas a la entrega anterior (se hzo sobre el mismo codigo)
+## Funcionalidades agregadas 
 
-    - Se creo la vista home.handlebars para desplegar el chat segun el requerimiento (se le agrego un estilo css para que se vea un poco mas bonito)
+    - Se modifico el metodo GET para productos a efectos de poder recibir los parametros : limit , page, sort (asc o desc) y query (category o stck); para devolver en consecuencia  a los requerido, ademas del informe de paginación requerido.
 
-   El usuario que quiera ingresar al chat se tiene que identificar con un formato de email válido, e informa al resto de los usuarios conectados cuando ingresa o se desconecta un usuario, los mensajes se guardan en la base de datos en la coleccion correspondiente, y se levantan cada vez que el servidor entra en ejecución. También da un mensaje de bienvenida a quien se conecta enviado por el server, pero este mensaje no se guarda en la colección de datos. 
+    -se agregaron los siguientes endpoints para los carritos : DELETE para eliminar todos los productos del carrito o el producto solicitado, PUT para actualizar la cantidad de un producto o cambiar todo por un nuevo array de productos/cantidades.
 
-   - Se desconecto el manejador de rutas de File System , pero no se eliminó (quedo en un manager separado y se comento en el código de app.js)
+    - se agrego un populate para la ruta /:cid para que traiga todos los datos de los productos del carrito
 
-   - Se crearon las rutas correspondientes (iguales a las de la versión anterior) pero manejadas via Mongoose a la base de datos de Mongo Db Atlas, las funcionalidades son exactemente iguales a las de la versión anterior , pero ahora son manejadas por un manager (que se llama managermd.js) creado en la carpeta dao como fuera requerido. Los esquemas de la base de datos fueron creados en user.model.js en la carpeta models.
+    - se creo una vista /products para visualizar todos los productos y poder generar un carrito en el boton Agregar al carrito
+
+    - se creo una vista /carts para visualizar el contenido de un carrito
 
 ## Funcionalidades pre-existentes (ya desarralladas para la entrega anterior)
 
@@ -44,3 +48,8 @@
         + __POST (para crear un carrito nuevo)__ = graba un registro en el carrito de compras con el id del producto informado (siempre y cuando exista en el archivo de productos) con cantidad en 1. Se genera la id del carrito automaticamente a partir de la id del último elemento la base de datos de carritos, ademas del generado automaticamente por MongoDB (se guardan los 2) 
         + __POST (para agregar un producto a un carrito existente)__ = debe informarse el id del carrito, busca el correpondiente carrito (en caso de no encontrarlo devuelve el error acorde), si esta todo ok , agrega el id del producto informado (siempra y cuando exista, sino devuelve un error), si el id del producto informado ya existe en el carrito, le agrega un 1 a la cantidad pre-existente en el archivo.
 
+    * CHAT  La vista home.handlebars despliega el chat segun el requerimiento (se le agrego un estilo css para que se vea un poco mas bonito)
+
+   El usuario que quiera ingresar al chat se tiene que identificar con un formato de email válido, e informa al resto de los usuarios conectados cuando ingresa o se desconecta un usuario, los mensajes se guardan en la base de datos en la coleccion correspondiente, y se levantan cada vez que el servidor entra en ejecución. También da un mensaje de bienvenida a quien se conecta enviado por el server, pero este mensaje no se guarda en la colección de datos. 
+
+   *  Se desconecto el manejador de rutas de File System , pero no se eliminó (quedo en un manager separado y se comento en el código de app.js)

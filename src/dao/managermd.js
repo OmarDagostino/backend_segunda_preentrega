@@ -115,7 +115,7 @@ router.post('/carts/product/:pid', async (req, res) => {
 router.delete('/carts/:cid/product/:pid', async (req, res) => {
   try {
     const cartId = req.params.cid;
-    const productId = req.params.pid;
+    const productIdToFind = req.params.pid;
 
     const validObjectId = ObjectId.isValid(cartId) ? new ObjectId(cartId) : null;
     if (!validObjectId) { 
@@ -129,13 +129,13 @@ router.delete('/carts/:cid/product/:pid', async (req, res) => {
           return;
         }
 
-        const validObjectId = ObjectId.isValid(productId) ? new ObjectId(productId) : null;
+        const validObjectId = ObjectId.isValid(productIdToFind) ? new ObjectId(productIdToFind) : null;
 
         if (!validObjectId) { 
           res.status(404).send("Identificador de Producto invalido");
           } 
           else {
-            const indice = cart.products.productId.indexOf(productId)
+            const indice  = cart.products.findIndex((product) => String(product.productId) === productIdToFind);
             if (indice!==-1) {
             cart.products.splice(indice,1)
             }
@@ -150,6 +150,7 @@ router.delete('/carts/:cid/product/:pid', async (req, res) => {
         }
       
   } catch (error) {
+    console.error(error);
     res.status(500).send('Error en el servidor');
   }
 });
@@ -186,9 +187,9 @@ router.delete('/carts/:cid/product/:pid', async (req, res) => {
 router.put('/carts/:cid/product/:pid', async (req, res) => {
   try {
     const cartId = req.params.cid;
-    const productId = req.params.pid;
-    const quantity = req.body;
-    if (isNaN.quantity|| quantity<=0) {
+    const productIdToFind = req.params.pid;
+    const cantidad = parseInt(req.body.quantity);
+    if (isNaN(cantidad) || cantidad<=0) {
       res.status(404).send('La cantidad debe ser un número positivo mayor que cero');
       return
     }
@@ -201,9 +202,9 @@ router.put('/carts/:cid/product/:pid', async (req, res) => {
           res.status(404).send('Carrito no encontrado');
           return;
         }
-        const indice = cart.products.productId.indexOf(productId)
-            if (indice!==-1) {
-              cart.products.quantity(indice)=quantity;
+        const indice  = cart.products.findIndex((product) => String(product.productId) === productIdToFind);
+            if (indice!==-1) {    
+              cart.products[indice].quantity=cantidad;
               await cart.save();
               res.status(201).json(cart);
             } else { 
@@ -213,6 +214,7 @@ router.put('/carts/:cid/product/:pid', async (req, res) => {
       }
   }
    catch (error) {
+    console.error(error);
     res.status(500).send('Error en el servidor');
   }
 });
@@ -222,8 +224,7 @@ router.put('/carts/:cid/product/:pid', async (req, res) => {
 router.put('/carts/:cid', async (req, res) => {
   try {
     const cartId = req.params.cid;
-    const nuevoCarrito = req.body;
-    
+    const nuevoCarrito = req.body;    
     const validObjectId = ObjectId.isValid(cartId) ? new ObjectId(cartId) : null;
     if (!validObjectId) { 
       res.status(404).send("Identificador del carrito invalido");
@@ -234,23 +235,26 @@ router.put('/carts/:cid', async (req, res) => {
           res.status(404).send('Carrito no encontrado');
           return;
       }
-          
-  if (Array.isArray(nuevoCarrito) && nuevoCarrito.length > 0) {
-    
+  
+  if (Array.isArray(nuevoCarrito.products) && nuevoCarrito.products.length > 0) {
+  
     const validacionExitosa = await Promise.all(
-      nuevoCarrito.map(async (item) => {
-        
-        if (!ObjectId.isValid(item.productId)) {
+      nuevoCarrito.products.map(async (item) => {
+              
+        if (!ObjectId.isValid(item.productId)) { 
+         
           return false; 
         }
-
-        const productExists = await Product.exists({ _id: item.productId });
+     
+        const productExists = await productModel.exists({ _id: item.productId }); 
+ 
         return productExists && typeof item.quantity === 'number' && item.quantity > 0;
       })
     );
 
     if (validacionExitosa.every((isValid) => isValid)) {
-      cart.products=nuevoCarrito
+      cart.products=nuevoCarrito.products
+    
       await cart.save();
       res.status(200).json({ mensaje: 'Carrito actualizado con éxito' });
     } else {
@@ -316,8 +320,8 @@ router.get('/products', async (req, res) => {
     const sortOrder = req.query.sort; 
     const query = req.query.query || ''; 
     const filter = {}; 
-    if (req.query.code) {
-      filter.code = req.query.code; 
+    if (req.query.category) {
+      filter.category = req.query.category; 
     }
     if (req.query.stock) {
       filter.stock = req.query.stock; 

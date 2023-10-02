@@ -55,6 +55,7 @@ app.get('/products', async (req,res) => {
         description: product.description,
         price: product.price,
         code: product.code,
+        category: product.category,
         stock: product.stock
       };
       
@@ -67,7 +68,7 @@ app.get('/products', async (req,res) => {
   }
 })
 
-app.get('/:cid', async (req,res)  => { 
+app.get('/carts/:cid', async (req,res)  => { 
     try {
     const cartId = req.params.cid;
     const validObjectId = ObjectId.isValid(cartId) ? new ObjectId(cartId) : null;
@@ -77,9 +78,7 @@ app.get('/:cid', async (req,res)  => {
         const cart = await cartModel.findOne({ _id : cartId }).populate('products.productId').exec();
         
         if (cart) {
-          console.log(cart.products);
-        
-          // Transforma los datos para evitar la comprobación de acceso a prototipos
+                
           const transformedCart = {
             cartId,
             products: cart.products.map(product => ({
@@ -89,12 +88,11 @@ app.get('/:cid', async (req,res)  => {
               price: product.productId.price,
               code: product.productId.code,
               stock: product.productId.stock,
+              category: product.productId.category,
               cantidad: product.quantity,
             })),
           };
-          console.log ('***************')
-        console.log (cart)
-        console.log (transformedCart)
+        
           res.setHeader('Content-Type', 'text/html');
           res.status(200).render('carts', { cart: transformedCart });
         } else {
